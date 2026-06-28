@@ -47,6 +47,13 @@ main :: proc() {
 	x_axis := 0
 	y_axis := 0
 
+	camera := rl.Camera2D {
+		offset   = rl.Vector2{0.0, 0.0},
+		target   = rl.Vector2{0.0, 0.0},
+		rotation = 0.0,
+		zoom     = 1.0,
+	}
+
 	for y_axis < MAX_ROWS {
 		if x_axis > MAX_OBSTACLES_PER_ROW {
 			x_axis = 0
@@ -93,6 +100,7 @@ main :: proc() {
 			check_bounds(pr, HEIGHT)
 			check_collisions_with_obstacles(pr, &obstacles)
 			if pr.should_delete {
+				shake_camera(&camera)
 				unordered_remove(&projectiles, i); continue
 			}
 			update_projectile(pr, delta)
@@ -113,6 +121,7 @@ main :: proc() {
 		// Draw
 		rl.BeginDrawing()
 		rl.ClearBackground(BACKGROUND)
+		rl.BeginMode2D(camera)
 		for pr in projectiles {
 			rl.DrawRectangleRec(pr.collider, rl.RED)
 		}
@@ -123,6 +132,7 @@ main :: proc() {
 			rl.DrawRectangleRec(en.collider, rl.BROWN)
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
+		rl.EndMode2D()
 		rl.EndDrawing()
 	}
 
