@@ -15,6 +15,9 @@ MAX_ROWS :: 20
 
 OBSTACLE_MARGIN :: 18
 
+MAX_NUMBER_OF_ENEMIES :: 5
+ENEMY_X_MARGIN :: 50
+
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, TITLE)
 
@@ -37,6 +40,8 @@ main :: proc() {
 
 	projectiles: [dynamic]Projectile
 
+	enemies: [dynamic]Enemy
+
 	obstacles: [dynamic]Obstacle
 
 	x_axis := 0
@@ -56,6 +61,18 @@ main :: proc() {
 			),
 		)
 		x_axis += 1
+	}
+
+	j := 0
+	for j < MAX_NUMBER_OF_ENEMIES {
+		append(
+			&enemies,
+			init_enemy(
+				f32(ENEMY_X_MARGIN * j) + ENEMY_X_MARGIN,
+				OBSTACLE_MARGIN * f32(y_axis + 1),
+			),
+		)
+		j += 1
 	}
 
 	for !rl.WindowShouldClose() {
@@ -82,8 +99,18 @@ main :: proc() {
 			i += 1
 		}
 
-		// Draw
+		ei := 0
+		for ei < len(&enemies) {
+			enemy := &enemies[ei]
+			update_enemy(enemy, &enemies, ei, delta)
+			if enemy.should_delete {
+				unordered_remove(&enemies, ei)
+				continue
+			}
+			ei += 1
+		}
 
+		// Draw
 		rl.BeginDrawing()
 		rl.ClearBackground(BACKGROUND)
 		for pr in projectiles {
@@ -91,6 +118,9 @@ main :: proc() {
 		}
 		for ob in obstacles {
 			rl.DrawRectangleRec(ob.collider, rl.BLUE)
+		}
+		for en in enemies {
+			rl.DrawRectangleRec(en.collider, rl.BROWN)
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
 		rl.EndDrawing()

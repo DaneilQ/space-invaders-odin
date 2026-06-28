@@ -51,9 +51,9 @@ check_collisions_with_obstacles :: proc(projectile: ^Projectile, obstacles: ^[dy
 	for i < len(obstacles) {
 		ob := &obstacles[i]
 		if rl.CheckCollisionRecs(projectile.collider, ob.collider) {
-			projectile.should_delete = true;
-			unordered_remove(obstacles,i);
-			break;
+			projectile.should_delete = true
+			unordered_remove(obstacles, i)
+			break
 		}
 		i += 1
 	}
