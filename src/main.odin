@@ -129,7 +129,7 @@ main :: proc() {
 			rl.DrawRectangleRec(ob.collider, rl.BLUE)
 		}
 		for en in enemies {
-			rl.DrawRectangleRec(en.collider, rl.BROWN)
+			rl.DrawRectangleRec(en.collider, en.color)
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
 		rl.EndMode2D()
