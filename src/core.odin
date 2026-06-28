@@ -13,7 +13,6 @@ BASE_SPACESHIP_SPEED :: 400
 MAX_OBSTACLES_PER_ROW :: 42
 MAX_ROWS :: 20
 
-
 boostrap :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, TITLE)
 
