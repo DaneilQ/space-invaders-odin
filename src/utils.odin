@@ -1,5 +1,5 @@
-package main;
+package main
 
-get_half :: proc(n:$T) -> T {
-    return n / 2;
+get_half :: proc(n: $T) -> T {
+	return n / 2
 }

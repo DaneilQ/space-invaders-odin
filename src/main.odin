@@ -13,6 +13,8 @@ BASE_SPACESHIP_SPEED :: 400
 MAX_OBSTACLES_PER_ROW :: 42
 MAX_ROWS :: 20
 
+OBSTACLE_MARGIN :: 18
+
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, TITLE)
 
@@ -46,7 +48,13 @@ main :: proc() {
 			y_axis += 1
 			continue
 		}
-		append(&obstacles, init_obstacle(f32((x_axis * 18) + 18), f32(y_axis * 18) + 18.0))
+		append(
+			&obstacles,
+			init_obstacle(
+				f32((x_axis * OBSTACLE_MARGIN) + OBSTACLE_MARGIN),
+				f32(y_axis * OBSTACLE_MARGIN) + OBSTACLE_MARGIN,
+			),
+		)
 		x_axis += 1
 	}
 

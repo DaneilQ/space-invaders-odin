@@ -1,7 +1,7 @@
 package main
 import rl "vendor:raylib"
 
-SPACESHIP_HEIGHT :: 30.0;
+SPACESHIP_HEIGHT :: 30.0
 
 Spaceship :: struct {
 	collider: rl.Rectangle,
