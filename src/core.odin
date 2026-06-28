@@ -62,7 +62,6 @@ boostrap :: proc() {
 			}
 		}
 
-
 		i := 0
 		for i < len(projectiles) {
 			pr := &projectiles[i]
@@ -86,7 +85,6 @@ boostrap :: proc() {
 			rl.DrawRectangleRec(ob.collider, rl.BLUE)
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
-		rl.DrawFPS(10, 10)
 		rl.EndDrawing()
 	}
 

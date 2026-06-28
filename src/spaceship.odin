@@ -1,7 +1,6 @@
 package main
 import rl "vendor:raylib"
 
-
 Spaceship :: struct {
 	collider: rl.Rectangle,
 	speed:    i32,
