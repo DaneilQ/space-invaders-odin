@@ -24,6 +24,7 @@ load_file :: proc(locale: Locale) -> []u8 {
 	return data
 }
 
+// TODO: This needs to run as a non-blocking routine
 load_translations :: proc(locale: Locale) -> Translations {
 	data := load_file(locale)
 	translations: Translations
