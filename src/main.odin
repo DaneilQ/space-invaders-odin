@@ -1,11 +1,11 @@
 package main
 
-import "core:strings"
 import localization "localization"
 import rl "vendor:raylib"
 
 WIDTH :: 800
 HEIGHT :: 600
+WINDOW :: "Invaders"
 BACKGROUND :: rl.BLACK
 MAX_PROJECTILES_ON_SCREEN :: 20
 TARGET_FPS :: 60
@@ -20,10 +20,10 @@ MAX_NUMBER_OF_ENEMIES :: 5
 ENEMY_X_MARGIN :: 50
 
 main :: proc() {
+	rl.InitWindow(WIDTH, HEIGHT, WINDOW)
 
 	current_lang := localization.Locale.En
 	translations := localization.load_translations(current_lang)
-	rl.InitWindow(WIDTH, HEIGHT, strings.clone_to_cstring(translations.window))
 
 	rl.SetTargetFPS(TARGET_FPS)
 
