@@ -5,11 +5,12 @@ import rl "vendor:raylib"
 
 
 Enemy :: struct {
-	collider:      rl.Rectangle,
-	direction:     Direction,
-	speed:         f32,
-	should_delete: bool,
-	color:         rl.Color,
+	collider:       rl.Rectangle,
+	direction:      Direction,
+	speed:          f32,
+	should_delete:  bool,
+	color:          rl.Color,
+	collider_timer: Timer,
 }
 
 Direction :: enum {
@@ -33,17 +34,19 @@ ENEMY_POSSIBLE_COLORS: [8]rl.Color = {
 DEFAULT_ENEMY_HEIGHT :: 30.0
 @(private = "file")
 DEFAULT_ENEMY_WIDTH :: 30.0
-
 @(private = "file")
 COLLISION_MARGIN :: 10.0
+@(private = "file")
+COLLISION_TIMER :: 0.1
 
 init_enemy :: proc(x: f32, y: f32, speed: f32 = 250.0) -> Enemy {
 	return Enemy {
 		collider = {x = x, y = y, width = DEFAULT_ENEMY_WIDTH, height = DEFAULT_ENEMY_HEIGHT},
 		direction = Direction.Left,
-		speed = speed,
+		speed = rand.float32_range(speed - 100, speed),
 		should_delete = false,
 		color = rand.choice(ENEMY_POSSIBLE_COLORS[:]),
+		collider_timer = init_timer(COLLISION_TIMER),
 	}
 }
 
@@ -63,13 +66,16 @@ oposite_direction :: proc(enemy: ^Enemy) {
 
 @(private = "file")
 handle_collisions_between_enemies :: proc(enemy1: ^Enemy, enemy2: ^Enemy) {
-
-	if rl.CheckCollisionRecs(enemy1.collider, enemy2.collider) {
-		oposite_direction(enemy1)
+	if timer_is_done(&enemy1.collider_timer) {
+		if rl.CheckCollisionRecs(enemy1.collider, enemy2.collider) {
+			oposite_direction(enemy1)
+			reset_timer(&enemy1.collider_timer)
+		}
 	}
 }
 
 update_enemy :: proc(enemy: ^Enemy, enemies: ^[dynamic]Enemy, current_index: int, delta: f32) {
+	update_timer(&enemy.collider_timer, delta)
 	if enemy.collider.x + enemy.collider.width > WIDTH {
 		set_direction(enemy, Direction.Right)
 	} else if enemy.collider.x <= 0 {
