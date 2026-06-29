@@ -39,11 +39,16 @@ COLLISION_MARGIN :: 10.0
 @(private = "file")
 COLLISION_TIMER :: 0.1
 
-init_enemy :: proc(x: f32, y: f32, speed: f32 = 250.0) -> Enemy {
+@(private = "file")
+MAX_SPEED :: 250.0
+@(private = "file")
+MIN_SPEED :: MAX_SPEED - 100.0
+
+init_enemy :: proc(x: f32, y: f32) -> Enemy {
 	return Enemy {
 		collider = {x = x, y = y, width = DEFAULT_ENEMY_WIDTH, height = DEFAULT_ENEMY_HEIGHT},
 		direction = Direction.Left,
-		speed = rand.float32_range(speed - 100, speed),
+		speed = rand.float32_range(MIN_SPEED, MAX_SPEED),
 		should_delete = false,
 		color = rand.choice(ENEMY_POSSIBLE_COLORS[:]),
 		collider_timer = init_timer(COLLISION_TIMER),
@@ -53,6 +58,12 @@ init_enemy :: proc(x: f32, y: f32, speed: f32 = 250.0) -> Enemy {
 @(private = "file")
 set_direction :: proc(enemy: ^Enemy, new_direction: Direction) {
 	enemy.direction = new_direction
+	set_random_speed(enemy)
+}
+
+@(private = "file")
+set_random_speed :: proc(enemy: ^Enemy) {
+	enemy.speed = rand.float32_range(MIN_SPEED, MAX_SPEED)
 }
 
 @(private = "file")
