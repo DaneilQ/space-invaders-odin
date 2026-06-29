@@ -28,6 +28,8 @@ main :: proc() {
 	spaceship_width: f32 = 60.0
 	bottom_margin: f32 = 70.0
 
+	STATE := start_state()
+
 	spaceship := init_spaceship(
 		rl_rectangle(
 			get_half(screen_width) - get_half(spaceship_width),
@@ -37,8 +39,6 @@ main :: proc() {
 		),
 		BASE_SPACESHIP_SPEED,
 	)
-
-	projectiles_timer := init_timer(0.3)
 
 	projectiles: [dynamic]Projectile
 
@@ -88,18 +88,7 @@ main :: proc() {
 
 		// Update
 		delta := rl.GetFrameTime()
-		move_spaceship(&spaceship, delta)
-
-		update_timer(&projectiles_timer, delta)
-
-		if timer_is_done(&projectiles_timer) {
-			if len(projectiles) <= MAX_PROJECTILES_ON_SCREEN {
-				if rl.IsKeyDown(rl.KeyboardKey.SPACE) {
-					reset_timer(&projectiles_timer)
-					append(&projectiles, init_projectile(&spaceship))
-				}
-			}
-		}
+		handle_spaceship_controls(&spaceship, &projectiles, delta)
 
 		i := 0
 		for i < len(projectiles) {
@@ -141,6 +130,7 @@ main :: proc() {
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
 		rl.EndMode2D()
+		rl.DrawText(get_current_level(&STATE), 10, 10, 20, rl.BROWN)
 		rl.EndDrawing()
 	}
 
