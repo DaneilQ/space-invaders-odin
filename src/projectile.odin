@@ -46,6 +46,18 @@ check_bounds :: proc(projectile: ^Projectile, w_height: i32) {
 	}
 }
 
+check_collisions_with_enemies :: proc(projectile: ^Projectile, enemies: ^[dynamic]Enemy) {
+	i := 0
+	for i < len(enemies) {
+		en := &enemies[i]
+		if rl.CheckCollisionRecs(projectile.collider, en.collider) {
+			projectile.should_delete = true
+			unordered_remove(enemies, i)
+		}
+		i += 1
+	}
+}
+
 check_collisions_with_obstacles :: proc(projectile: ^Projectile, obstacles: ^[dynamic]Obstacle) {
 	i := 0
 	for i < len(obstacles) {

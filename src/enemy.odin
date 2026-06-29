@@ -5,11 +5,11 @@ import rl "vendor:raylib"
 
 
 Enemy :: struct {
-	collider:            rl.Rectangle,
-	direction:           Direction,
-	speed:               f32,
-	should_delete:       bool,
-	color:               rl.Color,
+	collider:      rl.Rectangle,
+	direction:     Direction,
+	speed:         f32,
+	should_delete: bool,
+	color:         rl.Color,
 }
 
 Direction :: enum {
@@ -33,6 +33,9 @@ ENEMY_POSSIBLE_COLORS: [8]rl.Color = {
 DEFAULT_ENEMY_HEIGHT :: 30.0
 @(private = "file")
 DEFAULT_ENEMY_WIDTH :: 30.0
+
+@(private = "file")
+COLLISION_MARGIN :: 10.0
 
 init_enemy :: proc(x: f32, y: f32, speed: f32 = 250.0) -> Enemy {
 	return Enemy {
@@ -60,6 +63,7 @@ oposite_direction :: proc(enemy: ^Enemy) {
 
 @(private = "file")
 handle_collisions_between_enemies :: proc(enemy1: ^Enemy, enemy2: ^Enemy) {
+
 	if rl.CheckCollisionRecs(enemy1.collider, enemy2.collider) {
 		oposite_direction(enemy1)
 	}
