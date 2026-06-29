@@ -11,12 +11,12 @@ TARGET_FPS :: 60
 BASE_SPACESHIP_SPEED :: 400
 
 MAX_OBSTACLES_PER_ROW :: 42
-MAX_ROWS :: 20
+MAX_ROWS :: 7
 
 OBSTACLE_MARGIN :: 18
 
 MAX_NUMBER_OF_ENEMIES :: 5
-ENEMY_X_MARGIN :: 50
+ENEMY_X_MARGIN :: 150
 
 main :: proc() {
 	rl.InitWindow(WIDTH, HEIGHT, TITLE)
@@ -37,6 +37,8 @@ main :: proc() {
 		),
 		BASE_SPACESHIP_SPEED,
 	)
+
+	projectiles_timer := init_timer(0.3)
 
 	projectiles: [dynamic]Projectile
 
@@ -88,9 +90,14 @@ main :: proc() {
 		delta := rl.GetFrameTime()
 		move_spaceship(&spaceship, delta)
 
-		if len(projectiles) <= MAX_PROJECTILES_ON_SCREEN {
-			if rl.IsKeyPressed(rl.KeyboardKey.SPACE) {
-				append(&projectiles, init_projectile(&spaceship))
+		update_timer(&projectiles_timer, delta)
+
+		if timer_is_done(&projectiles_timer) {
+			if len(projectiles) <= MAX_PROJECTILES_ON_SCREEN {
+				if rl.IsKeyDown(rl.KeyboardKey.SPACE) {
+					reset_timer(&projectiles_timer)
+					append(&projectiles, init_projectile(&spaceship))
+				}
 			}
 		}
 
