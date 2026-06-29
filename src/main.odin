@@ -1,10 +1,11 @@
 package main
 
+import "core:strings"
+import localization "localization"
 import rl "vendor:raylib"
 
 WIDTH :: 800
 HEIGHT :: 600
-TITLE :: "Invaders test"
 BACKGROUND :: rl.BLACK
 MAX_PROJECTILES_ON_SCREEN :: 20
 TARGET_FPS :: 60
@@ -19,7 +20,10 @@ MAX_NUMBER_OF_ENEMIES :: 5
 ENEMY_X_MARGIN :: 50
 
 main :: proc() {
-	rl.InitWindow(WIDTH, HEIGHT, TITLE)
+
+	current_lang := localization.Locale.En
+	translations := localization.load_translations(current_lang)
+	rl.InitWindow(WIDTH, HEIGHT, strings.clone_to_cstring(translations.window))
 
 	rl.SetTargetFPS(TARGET_FPS)
 
@@ -90,6 +94,15 @@ main :: proc() {
 		delta := rl.GetFrameTime()
 		handle_spaceship_controls(&spaceship, &projectiles, delta)
 
+		if rl.IsKeyReleased(rl.KeyboardKey.O) {
+			if current_lang == localization.Locale.En {
+				current_lang = localization.Locale.Es
+			} else {
+				current_lang = localization.Locale.En
+			}
+			translations = localization.load_translations(current_lang)
+		}
+
 		i := 0
 		for i < len(projectiles) {
 			pr := &projectiles[i]
@@ -130,7 +143,7 @@ main :: proc() {
 		}
 		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
 		rl.EndMode2D()
-		rl.DrawText(get_current_level(&STATE), 10, 10, 20, rl.BROWN)
+		draw_current_level(&STATE, translations.level)
 		rl.EndDrawing()
 	}
 

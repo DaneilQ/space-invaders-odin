@@ -2,7 +2,6 @@ package main
 
 import "core:fmt"
 import "core:strings"
-import texts "texts"
 State :: struct {
 	level:            u8,
 	movement_speed:   int,
@@ -17,7 +16,7 @@ start_state :: proc() -> State {
 	}
 }
 
-get_current_level :: proc(state: ^State) -> cstring {
-	str := strings.concatenate([]string{texts.LEVEL, fmt.tprint(state.level)})
+get_current_level :: proc(state: ^State, text: string) -> cstring {
+	str := strings.concatenate([]string{text, fmt.tprint(state.level)})
 	return strings.clone_to_cstring(str)
 }
