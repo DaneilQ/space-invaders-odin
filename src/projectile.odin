@@ -15,7 +15,7 @@ BASE_PROJECTILE_SPEED :: -300.0
 
 
 init_projectile :: proc(
-	spaceship: ^Spaceship,
+	spaceship: $T,
 	momentum_y: f32 = BASE_PROJECTILE_SPEED,
 	momentum_x: f32 = 0.0,
 ) -> Projectile {
@@ -67,6 +67,29 @@ check_collisions_with_obstacles :: proc(projectile: ^Projectile, obstacles: ^[dy
 			unordered_remove(obstacles, i)
 			break
 		}
+		i += 1
+	}
+}
+
+update_and_mutate_projectiles :: proc(
+	projectiles: ^[dynamic]Projectile,
+	delta: f32,
+	aditional_functions: proc(pr: ^Projectile) = nil,
+) {
+	i := 0
+	for i < len(projectiles) {
+		pr := &projectiles[i]
+		check_bounds(pr, HEIGHT)
+
+		// This won't work since i need to plass aditional parameters for them to be in context
+		if aditional_functions != nil {
+			aditional_functions(pr)
+		}
+
+		if pr.should_delete {
+			unordered_remove(projectiles, i); continue
+		}
+		update_projectile(pr, delta)
 		i += 1
 	}
 }

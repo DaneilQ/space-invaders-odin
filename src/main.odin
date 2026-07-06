@@ -107,8 +107,7 @@ main :: proc() {
 		for i < len(projectiles) {
 			pr := &projectiles[i]
 			check_bounds(pr, HEIGHT)
-			check_collisions_with_obstacles(pr, &obstacles)
-			check_collisions_with_enemies(pr, &enemies)
+			
 			if pr.should_delete {
 				shake_camera(&camera)
 				unordered_remove(&projectiles, i); continue
