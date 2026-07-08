@@ -1,5 +1,6 @@
 package main
 
+import "core:path/slashpath"
 import localization "localization"
 import rl "vendor:raylib"
 
@@ -115,37 +116,15 @@ main :: proc() {
 
 		update_and_mutate_projectiles(&projectiles, &enemies, &obstacles, delta)
 		update_and_mutate_projectiles(&enemy_projectiles, &players, &obstacles, delta)
-
-		ei := 0
-		for ei < len(&enemies) {
-			enemy := &enemies[ei]
-			update_enemy(enemy, &enemies, &enemy_projectiles, ei, delta)
-			if enemy.should_delete {
-				unordered_remove(&enemies, ei)
-				continue
-			}
-			ei += 1
-		}
+		update_enemies(&enemies, &enemy_projectiles, delta)
 
 		// Draw
 		rl.BeginDrawing()
 		rl.ClearBackground(BACKGROUND)
 		rl.BeginMode2D(camera)
-		for pr in projectiles {
-			draw_rect(pr)
-		}
-		for pr_e in enemy_projectiles {
-			draw_rect(pr_e)
-		}
-		for ob in obstacles {
-			draw_rect(ob)
-		}
-		for en in enemies {
-			draw_rect(en)
-		}
-		for pl in players {
-			draw_rect(pl)
-		}
+
+		draw_entities(projectiles, enemy_projectiles, obstacles, enemies, players)
+
 		rl.EndMode2D()
 		draw_current_level(&STATE, translations.level)
 		rl.EndDrawing()

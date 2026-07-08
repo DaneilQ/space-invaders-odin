@@ -8,7 +8,6 @@ Entity :: struct {
 	should_delete: bool,
 }
 
-
 draw_rect :: proc(collider: Entity) {
 	rl.DrawRectangleRec(collider.collider, collider.color)
 }

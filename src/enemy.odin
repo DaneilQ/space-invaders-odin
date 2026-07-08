@@ -126,3 +126,21 @@ update_enemy :: proc(
 		enemy.collider.x -= (enemy.speed * delta)
 	}
 }
+
+
+update_enemies :: proc(
+	enemies: ^[dynamic]Enemy,
+	enemy_projectiles: ^[dynamic]Projectile,
+	delta: f32,
+) {
+	ei := 0
+	for ei < len(enemies) {
+		enemy := &enemies[ei]
+		update_enemy(enemy, enemies, enemy_projectiles, ei, delta)
+		if enemy.should_delete {
+			unordered_remove(enemies, ei)
+			continue
+		}
+		ei += 1
+	}
+}
