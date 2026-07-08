@@ -1,5 +1,6 @@
 package main
 
+import "core:math"
 import rl "vendor:raylib"
 
 Projectile :: struct {
@@ -73,22 +74,26 @@ check_collisions_with_obstacles :: proc(projectile: ^Projectile, obstacles: ^[dy
 
 update_and_mutate_projectiles :: proc(
 	projectiles: ^[dynamic]Projectile,
+	entities: ^[dynamic]$T,
+	obstacles: ^[dynamic]Obstacle,
 	delta: f32,
-	aditional_functions: proc(pr: ^Projectile) = nil,
 ) {
 	i := 0
 	for i < len(projectiles) {
 		pr := &projectiles[i]
 		check_bounds(pr, HEIGHT)
 
-		// This won't work since i need to plass aditional parameters for them to be in context
-		if aditional_functions != nil {
-			aditional_functions(pr)
+		if (type_of(entities) == ^[dynamic]Enemy) {
+			// this needs to a refactor for generics
+			enemies: ^[dynamic]Enemy = entities;
+			check_collisions_with_enemies(pr, enemies)
 		}
+		check_collisions_with_obstacles(pr, obstacles)
 
 		if pr.should_delete {
 			unordered_remove(projectiles, i); continue
 		}
+
 		update_projectile(pr, delta)
 		i += 1
 	}

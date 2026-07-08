@@ -44,7 +44,12 @@ main :: proc() {
 		BASE_SPACESHIP_SPEED,
 	)
 
+	players: [dynamic]Spaceship
+	append(&players, spaceship)
+
 	projectiles: [dynamic]Projectile
+	enemy_projectiles: [dynamic]Projectile
+
 
 	enemies: [dynamic]Enemy
 
@@ -103,23 +108,13 @@ main :: proc() {
 			translations = localization.load_translations(current_lang)
 		}
 
-		i := 0
-		for i < len(projectiles) {
-			pr := &projectiles[i]
-			check_bounds(pr, HEIGHT)
-			
-			if pr.should_delete {
-				shake_camera(&camera)
-				unordered_remove(&projectiles, i); continue
-			}
-			update_projectile(pr, delta)
-			i += 1
-		}
+		update_and_mutate_projectiles(&projectiles, &enemies, &obstacles, delta)
+		update_and_mutate_projectiles(&enemy_projectiles, &players, &obstacles, delta)
 
 		ei := 0
 		for ei < len(&enemies) {
 			enemy := &enemies[ei]
-			update_enemy(enemy, &enemies, ei, delta)
+			update_enemy(enemy, &enemies, &enemy_projectiles, ei, delta)
 			if enemy.should_delete {
 				unordered_remove(&enemies, ei)
 				continue
@@ -133,6 +128,9 @@ main :: proc() {
 		rl.BeginMode2D(camera)
 		for pr in projectiles {
 			rl.DrawRectangleRec(pr.collider, rl.RED)
+		}
+		for pr_e in enemy_projectiles {
+			rl.DrawRectangleRec(pr_e.collider, rl.RED)
 		}
 		for ob in obstacles {
 			rl.DrawRectangleRec(ob.collider, rl.BLUE)

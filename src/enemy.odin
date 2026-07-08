@@ -42,9 +42,11 @@ COLLISION_MARGIN :: 10.0
 @(private = "file")
 COLLISION_TIMER :: 0.1
 @(private = "file")
-PROJECTILE_TIMER :: 0.5
+PROJECTILE_TIMER :: 1.2
 @(private = "file")
 BASE_ENEMY_PROJECTILE_SPEED :: 300
+@(private = "file")
+MAX_ENEMY_PROJECTILES :: 30
 
 @(private = "file")
 MAX_SPEED :: 250.0
@@ -93,13 +95,15 @@ handle_collisions_between_enemies :: proc(enemy1: ^Enemy, enemy2: ^Enemy) {
 	}
 }
 
-update_enemy :: proc(enemy: ^Enemy, enemies: ^[dynamic]Enemy, current_index: int, delta: f32) {
+update_enemy :: proc(
+	enemy: ^Enemy,
+	enemies: ^[dynamic]Enemy,
+	enemy_projectiles: ^[dynamic]Projectile,
+	current_index: int,
+	delta: f32,
+) {
 	update_timer(&enemy.collider_timer, delta)
 	update_timer(&enemy.projectile_timer, delta)
-
-	for pr in enemy.projectiles {
-		
-	}
 
 	if enemy.collider.x + enemy.collider.width > WIDTH {
 		set_direction(enemy, Direction.Right)
@@ -114,8 +118,8 @@ update_enemy :: proc(enemy: ^Enemy, enemies: ^[dynamic]Enemy, current_index: int
 		handle_collisions_between_enemies(&en, enemy)
 	}
 
-	if timer_is_done(&enemy.projectile_timer) {
-		init_projectile(enemy, BASE_ENEMY_PROJECTILE_SPEED)
+	if timer_is_done(&enemy.projectile_timer) && len(enemy_projectiles) < MAX_ENEMY_PROJECTILES {
+		append(enemy_projectiles, init_projectile(enemy, BASE_ENEMY_PROJECTILE_SPEED))
 		reset_timer(&enemy.projectile_timer)
 	}
 
