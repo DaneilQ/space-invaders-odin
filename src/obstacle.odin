@@ -1,8 +1,7 @@
 package main
 
-import rl "vendor:raylib"
 Obstacle :: struct {
-	collider: rl.Rectangle,
+	using co: Collider,
 }
 
 DEFAULT_OBSTACLE_HEIGHT :: 10.0

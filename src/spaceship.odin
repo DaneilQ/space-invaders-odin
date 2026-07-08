@@ -3,8 +3,13 @@ import rl "vendor:raylib"
 
 SPACESHIP_HEIGHT :: 30.0
 
+
+Collider :: struct {
+	collider: rl.Rectangle,
+}
+
 Spaceship :: struct {
-	collider:          rl.Rectangle,
+	using co:          Collider,
 	speed:             i32,
 	projectiles_timer: Timer,
 }

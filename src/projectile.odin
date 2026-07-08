@@ -47,7 +47,7 @@ check_bounds :: proc(projectile: ^Projectile, w_height: i32) {
 	}
 }
 
-check_collisions_with_enemies :: proc(projectile: ^Projectile, enemies: ^[dynamic]Enemy) {
+check_collisions_with_enemies :: proc(projectile: ^Projectile, enemies: ^[dynamic]$T) {
 	i := 0
 	for i < len(enemies) {
 		en := &enemies[i]
@@ -83,11 +83,7 @@ update_and_mutate_projectiles :: proc(
 		pr := &projectiles[i]
 		check_bounds(pr, HEIGHT)
 
-		if (type_of(entities) == ^[dynamic]Enemy) {
-			// this needs to a refactor for generics
-			enemies: ^[dynamic]Enemy = entities;
-			check_collisions_with_enemies(pr, enemies)
-		}
+		check_collisions_with_enemies(pr, entities)
 		check_collisions_with_obstacles(pr, obstacles)
 
 		if pr.should_delete {

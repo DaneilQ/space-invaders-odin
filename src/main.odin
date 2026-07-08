@@ -34,18 +34,20 @@ main :: proc() {
 
 	STATE := start_state()
 
-	spaceship := init_spaceship(
-		rl_rectangle(
-			get_half(screen_width) - get_half(spaceship_width),
-			screen_height - bottom_margin,
-			spaceship_width,
-			SPACESHIP_HEIGHT,
-		),
-		BASE_SPACESHIP_SPEED,
-	)
 
 	players: [dynamic]Spaceship
-	append(&players, spaceship)
+	append(
+		&players,
+		init_spaceship(
+			rl_rectangle(
+				get_half(screen_width) - get_half(spaceship_width),
+				screen_height - bottom_margin,
+				spaceship_width,
+				SPACESHIP_HEIGHT,
+			),
+			BASE_SPACESHIP_SPEED,
+		),
+	)
 
 	projectiles: [dynamic]Projectile
 	enemy_projectiles: [dynamic]Projectile
@@ -97,7 +99,9 @@ main :: proc() {
 
 		// Update
 		delta := rl.GetFrameTime()
-		handle_spaceship_controls(&spaceship, &projectiles, delta)
+		for &pl in players {
+			handle_spaceship_controls(&pl, &projectiles, delta)
+		}
 
 		if rl.IsKeyReleased(rl.KeyboardKey.O) {
 			if current_lang == localization.Locale.En {
@@ -138,7 +142,9 @@ main :: proc() {
 		for en in enemies {
 			rl.DrawRectangleRec(en.collider, en.color)
 		}
-		rl.DrawRectangleRec(spaceship.collider, rl.BLUE)
+		for pl in players {
+			rl.DrawRectangleRec(pl.collider, rl.BLUE)
+		}
 		rl.EndMode2D()
 		draw_current_level(&STATE, translations.level)
 		rl.EndDrawing()
