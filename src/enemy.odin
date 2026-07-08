@@ -49,15 +49,17 @@ MAX_SPEED :: 250.0
 MIN_SPEED :: MAX_SPEED - 100.0
 
 init_enemy :: proc(x: f32, y: f32) -> Enemy {
-	return Enemy {
+	enemy := Enemy {
 		collider = {x = x, y = y, width = DEFAULT_ENEMY_WIDTH, height = DEFAULT_ENEMY_HEIGHT},
 		direction = Direction.Left,
 		speed = get_random_between(MIN_SPEED, MAX_SPEED),
 		should_delete = false,
 		color = random_choice(ENEMY_POSSIBLE_COLORS[:]),
 		collider_timer = init_timer(COLLISION_TIMER),
-		projectile_timer = init_timer(PROJECTILE_TIMER),
+		projectile_timer = init_timer(get_random_between(PROJECTILE_TIMER - .5, PROJECTILE_TIMER)),
 	}
+	reset_timer(&enemy.projectile_timer)
+	return enemy
 }
 
 @(private = "file")
