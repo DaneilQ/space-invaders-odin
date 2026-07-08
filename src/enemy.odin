@@ -1,16 +1,11 @@
 package main
 
-import "core:fmt"
-import rand "core:math/rand"
 import rl "vendor:raylib"
 
-
 Enemy :: struct {
-	collider:         rl.Rectangle,
+	using co:         Entity,
 	direction:        Direction,
 	speed:            f32,
-	should_delete:    bool,
-	color:            rl.Color,
 	collider_timer:   Timer,
 	projectile_timer: Timer,
 	projectiles:      [dynamic]Projectile,
@@ -57,9 +52,9 @@ init_enemy :: proc(x: f32, y: f32) -> Enemy {
 	return Enemy {
 		collider = {x = x, y = y, width = DEFAULT_ENEMY_WIDTH, height = DEFAULT_ENEMY_HEIGHT},
 		direction = Direction.Left,
-		speed = rand.float32_range(MIN_SPEED, MAX_SPEED),
+		speed = get_random_between(MIN_SPEED, MAX_SPEED),
 		should_delete = false,
-		color = rand.choice(ENEMY_POSSIBLE_COLORS[:]),
+		color = random_choice(ENEMY_POSSIBLE_COLORS[:]),
 		collider_timer = init_timer(COLLISION_TIMER),
 		projectile_timer = init_timer(PROJECTILE_TIMER),
 	}
@@ -73,7 +68,7 @@ set_direction :: proc(enemy: ^Enemy, new_direction: Direction) {
 
 @(private = "file")
 set_random_speed :: proc(enemy: ^Enemy) {
-	enemy.speed = rand.float32_range(MIN_SPEED, MAX_SPEED)
+	enemy.speed = get_random_between(MIN_SPEED, MAX_SPEED)
 }
 
 @(private = "file")

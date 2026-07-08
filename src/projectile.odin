@@ -1,13 +1,11 @@
 package main
 
-import "core:math"
 import rl "vendor:raylib"
 
 Projectile :: struct {
-	collider:      rl.Rectangle,
-	momentum_x:    f32,
-	momentum_y:    f32,
-	should_delete: bool,
+	using co:   Entity,
+	momentum_x: f32,
+	momentum_y: f32,
 }
 
 PROJECTILE_WIDTH: f32 : 10.0
@@ -30,6 +28,7 @@ init_projectile :: proc(
 		momentum_x = momentum_x,
 		momentum_y = momentum_y,
 		should_delete = false,
+		color = rl.RED,
 	}
 }
 

@@ -46,6 +46,7 @@ main :: proc() {
 				SPACESHIP_HEIGHT,
 			),
 			BASE_SPACESHIP_SPEED,
+			rl.BLUE,
 		),
 	)
 
@@ -131,19 +132,19 @@ main :: proc() {
 		rl.ClearBackground(BACKGROUND)
 		rl.BeginMode2D(camera)
 		for pr in projectiles {
-			rl.DrawRectangleRec(pr.collider, rl.RED)
+			draw_rect(pr)
 		}
 		for pr_e in enemy_projectiles {
-			rl.DrawRectangleRec(pr_e.collider, rl.RED)
+			draw_rect(pr_e)
 		}
 		for ob in obstacles {
-			rl.DrawRectangleRec(ob.collider, rl.BLUE)
+			draw_rect(ob)
 		}
 		for en in enemies {
-			rl.DrawRectangleRec(en.collider, en.color)
+			draw_rect(en)
 		}
 		for pl in players {
-			rl.DrawRectangleRec(pl.collider, rl.BLUE)
+			draw_rect(pl)
 		}
 		rl.EndMode2D()
 		draw_current_level(&STATE, translations.level)

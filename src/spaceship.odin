@@ -3,19 +3,19 @@ import rl "vendor:raylib"
 
 SPACESHIP_HEIGHT :: 30.0
 
-
-Collider :: struct {
-	collider: rl.Rectangle,
-}
-
 Spaceship :: struct {
-	using co:          Collider,
+	using co:          Entity,
 	speed:             i32,
 	projectiles_timer: Timer,
 }
 
-init_spaceship :: proc(collider: rl.Rectangle, speed: i32) -> Spaceship {
-	return Spaceship{collider = collider, speed = speed, projectiles_timer = init_timer(0.5)}
+init_spaceship :: proc(collider: rl.Rectangle, speed: i32, color: rl.Color) -> Spaceship {
+	return Spaceship {
+		collider = collider,
+		speed = speed,
+		projectiles_timer = init_timer(0.5),
+		color = color,
+	}
 }
 
 handle_spaceship_controls :: proc(ss: ^Spaceship, projectiles: ^[dynamic]Projectile, delta: f32) {

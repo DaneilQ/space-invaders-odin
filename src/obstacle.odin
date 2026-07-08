@@ -1,7 +1,7 @@
 package main
-
+import rl "vendor:raylib"
 Obstacle :: struct {
-	using co: Collider,
+	using co: Entity,
 }
 
 DEFAULT_OBSTACLE_HEIGHT :: 10.0
@@ -15,5 +15,6 @@ init_obstacle :: proc(x: f32, y: f32) -> Obstacle {
 			height = DEFAULT_OBSTACLE_HEIGHT,
 			width = DEFAULT_OBSTACLE_WIDTH,
 		},
+		color = rl.LIME,
 	}
 }
