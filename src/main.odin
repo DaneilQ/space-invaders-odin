@@ -28,74 +28,20 @@ main :: proc() {
 
 	rl.SetTargetFPS(TARGET_FPS)
 
-	screen_width := f32(rl.GetScreenWidth())
-	screen_height := f32(rl.GetScreenHeight())
-	spaceship_width: f32 = 60.0
-	bottom_margin: f32 = 70.0
-
 	STATE := start_state()
 
-
-	players: [dynamic]Spaceship
-	append(
-		&players,
-		init_spaceship(
-			rl_rectangle(
-				get_half(screen_width) - get_half(spaceship_width),
-				screen_height - bottom_margin,
-				spaceship_width,
-				SPACESHIP_HEIGHT,
-			),
-			BASE_SPACESHIP_SPEED,
-			rl.BLUE,
-		),
-	)
+	players := generate_players()
 
 	projectiles: [dynamic]Projectile
 	enemy_projectiles: [dynamic]Projectile
-
-
 	enemies: [dynamic]Enemy
-
 	obstacles: [dynamic]Obstacle
 
-	x_axis := 0
-	y_axis := 0
+	camera := generate_scene_camera()
 
-	camera := rl.Camera2D {
-		offset   = rl.Vector2{0.0, 0.0},
-		target   = rl.Vector2{0.0, 0.0},
-		rotation = 0.0,
-		zoom     = 1.0,
-	}
+	y_axis, _ := generate_obstacles(&obstacles)
 
-	for y_axis < MAX_ROWS {
-		if x_axis > MAX_OBSTACLES_PER_ROW {
-			x_axis = 0
-			y_axis += 1
-			continue
-		}
-		append(
-			&obstacles,
-			init_obstacle(
-				f32((x_axis * OBSTACLE_MARGIN) + OBSTACLE_MARGIN),
-				f32(y_axis * OBSTACLE_MARGIN) + OBSTACLE_MARGIN,
-			),
-		)
-		x_axis += 1
-	}
-
-	j := 0
-	for j < MAX_NUMBER_OF_ENEMIES {
-		append(
-			&enemies,
-			init_enemy(
-				f32(ENEMY_X_MARGIN * j) + ENEMY_X_MARGIN,
-				OBSTACLE_MARGIN * f32(y_axis + 1),
-			),
-		)
-		j += 1
-	}
+	generate_enemies(&enemies, y_axis)
 
 	for !rl.WindowShouldClose() {
 
