@@ -4,8 +4,8 @@
 
 This is a very basic implementation of space invaders in the odin programming language w/ raylib 5.5.
 
-There's obstacles, enemies, projectiles; the works.
+There's obstacles, enemies, projectiles. Also, I created a custom and very simple localization system, you know; the works.
 
-So far I adore Odin
+So far I adore Odin.
 
-that's it, get out
+That's it, get out.
